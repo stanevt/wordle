@@ -1,0 +1,22 @@
+.row {
+  display: flex;
+  gap: 5px;
+}
+
+@media (max-width: 768px) {
+  .row { gap: 4px; }
+}
+
+@keyframes row-shake {
+  0%,100% { transform: translateX(0); }
+  15%      { transform: translateX(-6px); }
+  30%      { transform: translateX(6px); }
+  45%      { transform: translateX(-6px); }
+  60%      { transform: translateX(6px); }
+  75%      { transform: translateX(-4px); }
+  90%      { transform: translateX(4px); }
+}
+
+.row--shake {
+  animation: row-shake 0.5s ease-in-out;
+}

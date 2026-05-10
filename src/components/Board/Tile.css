@@ -1,0 +1,58 @@
+.tile {
+  width: 62px;
+  height: 62px;
+  border: 2px solid var(--color-tile-border-empty);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--color-text);
+  user-select: none;
+  transition: border-color 0.05s;
+  position: relative;
+}
+
+.tile--filled {
+  border-color: var(--color-tile-border-filled);
+  animation: tile-pop 0.08s ease-in-out;
+}
+
+.tile--revealed {
+  border-color: transparent;
+}
+
+.tile--flip {
+  animation: tile-flip 0.5s ease-in-out forwards;
+  animation-delay: calc(var(--tile-index, 0) * 0.3s);
+}
+
+@keyframes tile-pop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+@keyframes tile-flip {
+  0%   { transform: rotateX(0deg); background-color: transparent; border-color: var(--color-tile-border-filled); }
+  49%  { transform: rotateX(-90deg); background-color: transparent; }
+  50%  { transform: rotateX(-90deg); background-color: var(--tile-result-color, var(--color-absent)); border-color: transparent; color: #fff; }
+  100% { transform: rotateX(0deg);  background-color: var(--tile-result-color, var(--color-absent)); border-color: transparent; color: #fff; }
+}
+
+@media (max-width: 768px) {
+  .tile {
+    /* keyboard: 8px top + 3×54px keys + 2×8px gaps + safe-area ≈ 190px reserved */
+    --_kb: calc(190px + env(safe-area-inset-bottom, 12px));
+    /* available vertical space for 6 rows (header=56px, padding-top=12px) */
+    --_avail: calc(100dvh - 68px - var(--_kb));
+    /* tile height = (space - 5 row-gaps of 4px) / 6 rows */
+    --_tile-h: calc((var(--_avail) - 20px) / 6);
+    /* tile width = (viewport - 16px side-padding - 4 col-gaps of 5px) / 5 cols */
+    --_tile-w: calc((100vw - 36px) / 5);
+    width: min(var(--_tile-w), var(--_tile-h), 66px);
+    height: min(var(--_tile-w), var(--_tile-h), 66px);
+    font-size: calc(min(var(--_tile-w), var(--_tile-h), 66px) * 0.5);
+  }
+}

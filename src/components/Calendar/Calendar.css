@@ -1,0 +1,92 @@
+.calendar {
+  background-color: var(--color-surface);
+  border-radius: 12px;
+  padding: 16px;
+  min-width: 260px;
+  max-width: 300px;
+  border: 1px solid var(--color-border);
+}
+
+.calendar-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.cal-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--color-text);
+}
+
+.cal-nav-btn {
+  background: none;
+  border: none;
+  color: var(--color-text);
+  font-size: 1.4rem;
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: 6px;
+  line-height: 1;
+  transition: background-color 0.15s;
+}
+.cal-nav-btn:hover:not(:disabled) { background-color: var(--color-key-bg); }
+.cal-nav-btn:disabled { opacity: 0.3; cursor: default; }
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+}
+
+.cal-day-name {
+  text-align: center;
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  font-weight: 600;
+  padding: 4px 0;
+}
+
+.cal-cell {
+  position: relative;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 6px;
+  border: none;
+  background: none;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background-color 0.15s;
+  font-family: inherit;
+}
+.cal-cell:hover:not(.cal-cell--disabled):not(.cal-cell--selected) {
+  background-color: var(--color-key-bg);
+}
+.cal-cell--empty { pointer-events: none; }
+.cal-cell--disabled { opacity: 0.2; cursor: default; }
+.cal-cell--selected {
+  background-color: var(--color-text);
+  color: var(--color-background);
+}
+.cal-cell--today {
+  outline: 2px solid var(--color-text-muted);
+  outline-offset: -2px;
+}
+
+.cal-cell--won  .cal-dot { background-color: var(--color-correct); }
+.cal-cell--lost .cal-dot { background-color: #e74c3c; }
+
+.cal-dot {
+  position: absolute;
+  bottom: 3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+}

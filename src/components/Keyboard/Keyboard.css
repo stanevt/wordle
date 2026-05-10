@@ -1,0 +1,78 @@
+.keyboard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  max-width: 500px;
+}
+
+.keyboard-row {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+
+.key {
+  height: 58px;
+  min-width: 43px;
+  padding: 0 6px;
+  border-radius: 4px;
+  border: none;
+  background-color: var(--color-key-bg);
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: background-color 0.2s, color 0.2s;
+  flex: 1;
+  max-width: 43px;
+}
+
+.key--wide {
+  min-width: 65px;
+  max-width: 65px;
+  font-size: 0.75rem;
+}
+
+.key--correct { background-color: var(--color-correct); color: #fff; }
+.key--present { background-color: var(--color-present); color: #fff; }
+.key--absent  { background-color: var(--color-absent);  color: #fff; }
+
+.key:active {
+  filter: brightness(0.85);
+}
+
+@media (max-width: 768px) {
+  .keyboard {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-width: 100%;
+    width: 100%;
+    padding: 8px 6px env(safe-area-inset-bottom, 12px);
+    box-sizing: border-box;
+    background-color: var(--color-background);
+    z-index: 10;
+  }
+
+  .keyboard-row {
+    gap: 5px;
+  }
+
+  .key {
+    height: 54px;
+    min-width: 0;
+    max-width: none;
+    font-size: 0.8rem;
+  }
+
+  .key--wide {
+    min-width: 0;
+    max-width: none;
+    flex: 1.5;
+    font-size: 0.72rem;
+  }
+}

@@ -1,0 +1,10 @@
+.board {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  perspective: 600px;
+}
+
+@media (max-width: 768px) {
+  .board { gap: 4px; }
+}
