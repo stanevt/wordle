@@ -81,6 +81,12 @@ export default function App() {
         <section className="game-area">
           <div className="board-wrapper">
             <Toast message={game.toastMessage} />
+            {game.status === 'won' && game.guesses.length === 2 && (
+              <p className="easter-egg">CHEATER!</p>
+            )}
+            {game.status === 'won' && game.guesses.length === 6 && (
+              <p className="easter-egg">ALMOST BECAME THE STRIKE OUT QUEEN</p>
+            )}
             <Board
               guesses={game.guesses}
               evaluations={game.evaluations}
