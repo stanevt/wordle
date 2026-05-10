@@ -1,6 +1,8 @@
 # Wordle Clone
 
-My wordle clone. I often forget to do it and the official website doesn't let me browse previous days it so here's my clone + yesterday's word because that's what I use as a first word and it saves me a bit of googling. Yesterday's word on mobile it lives inside the calendar widget.
+A small Wordle clone I made because I forget to do it every now and again, and the official site doesn’t let you revisit previous days.
+It also shows yesterday’s word, since that’s my usual starter and this saves me from Googling it every time.
+On mobile, yesterday’s word is tucked inside the calendar widget.
 
 ## Build
 
