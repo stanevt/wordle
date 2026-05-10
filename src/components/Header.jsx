@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './Header.css';
 
 export default function Header({ onStatsClick, onCalendarClick, prevAnswer, selectedDate }) {
   const [revealed, setRevealed] = useState(false);
+
+  useEffect(() => { setRevealed(false); }, [prevAnswer]);
 
   return (
     <header className="header">
@@ -29,7 +31,7 @@ export default function Header({ onStatsClick, onCalendarClick, prevAnswer, sele
         </button>
       </div>
 
-      <h1 className="header-title">Wordle</h1>
+      <h1 className="header-title">Todd's Wordle</h1>
 
       <div className="header-right">
         <button className="icon-btn" onClick={onStatsClick} aria-label="Statistics">

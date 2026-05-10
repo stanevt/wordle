@@ -21,6 +21,14 @@
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .header-title {
+    font-size: 1.1rem;
+    letter-spacing: 0.04em;
+  }
 }
 
 .header-left, .header-right {
