@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react';
-import { fetchTodaysChampion } from '../../lib/gameSync';
+import { fetchTodaysChampion, fetchTodaysStriker } from '../../lib/gameSync';
 import { todayISO } from '../../utils/dateUtils';
 import './StatsModal.css';
 
 export default function StatsModal({ isOpen, onClose, stats }) {
   const [champion, setChampion] = useState(null);
+  const [striker, setStriker] = useState(null);
 
   useEffect(() => {
     if (!isOpen) return;
     fetchTodaysChampion(todayISO()).then(setChampion).catch(() => {});
+    fetchTodaysStriker(todayISO()).then(setStriker).catch(() => {});
   }, [isOpen]);
 
   if (!isOpen) return null;
@@ -58,6 +60,21 @@ export default function StatsModal({ isOpen, onClose, stats }) {
             </div>
           ) : (
             <p className="champion-empty">No winner yet today — be the first!</p>
+          )}
+        </div>
+
+        <div className="striker-section">
+          <h3 className="striker-title">Wall of Shame</h3>
+          {striker ? (
+            <div className="striker-card">
+              <svg className="striker-icon" viewBox="0 0 24 24" fill="currentColor" width="20" height="20" aria-hidden="true">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+              </svg>
+              <span className="striker-name">{striker.username}</span>
+              <span className="striker-label">struck out</span>
+            </div>
+          ) : (
+            <p className="striker-empty">No strike outs today — impressive!</p>
           )}
         </div>
       </div>

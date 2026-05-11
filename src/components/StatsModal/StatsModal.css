@@ -168,3 +168,55 @@
   color: var(--color-text-muted);
   margin: 0;
 }
+
+.striker-section {
+  margin-top: 16px;
+  border-top: 1px solid var(--color-border);
+  padding-top: 18px;
+}
+
+.striker-title {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-align: center;
+  margin: 0 0 12px;
+  color: var(--color-text-muted);
+}
+
+.striker-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  background: var(--color-key-bg);
+  border-radius: 8px;
+  padding: 12px 16px;
+  text-align: center;
+}
+
+.striker-icon {
+  color: var(--color-absent);
+  flex-shrink: 0;
+}
+
+.striker-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text);
+  letter-spacing: 0.04em;
+}
+
+.striker-label {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  margin-left: 2px;
+}
+
+.striker-empty {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  margin: 0;
+}

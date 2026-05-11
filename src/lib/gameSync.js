@@ -8,6 +8,12 @@ export async function fetchTodaysChampion(date) {
   return data?.[0] ?? null;
 }
 
+export async function fetchTodaysStriker(date) {
+  const { data, error } = await supabase.rpc('get_todays_striker', { today_date: date });
+  if (error) throw error;
+  return data?.[0] ?? null;
+}
+
 export async function upsertResult(userId, date, guesses, status) {
   await supabase
     .from('game_results')
