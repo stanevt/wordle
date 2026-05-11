@@ -160,6 +160,7 @@ export default function App() {
 
       <EasterEgg
         message={
+          game.status === 'won' && game.guesses.length === 1 ? 'CHEATER!' :
           game.status === 'won' && game.guesses.length === 2 ? 'CHEATER!' :
           game.status === 'won' && game.guesses.length === 6 ? 'ALMOST BECAME THE STRIKE OUT QUEEN' :
           null
