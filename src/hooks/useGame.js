@@ -2,6 +2,7 @@ import { useCallback, useEffect, useReducer, useRef } from 'react';
 import { MAX_GUESSES, WORD_LENGTH, REVEAL_DURATION_MS } from '../utils/constants';
 import { evaluateGuess } from '../utils/tileEvaluation';
 import { loadGameState, saveGameState } from '../utils/storage';
+import { upsertResult } from '../lib/gameSync';
 
 function initState(dateStr, answer) {
   const saved = loadGameState(dateStr);
@@ -69,7 +70,7 @@ function reducer(state, action) {
   }
 }
 
-export function useGame({ answer, dateStr, isValidWord }) {
+export function useGame({ answer, dateStr, isValidWord, userId }) {
   const [state, dispatch] = useReducer(reducer, null, () =>
     initState(dateStr, answer)
   );
@@ -126,6 +127,7 @@ export function useGame({ answer, dateStr, isValidWord }) {
     // Persist immediately
     const newStatus = won ? 'won' : lost ? 'lost' : 'playing';
     saveGameState(dateStr, { guesses: newGuesses, status: newStatus });
+    if (userId) upsertResult(userId, dateStr, newGuesses, newStatus).catch(() => {});
 
     clearTimeout(revealTimerRef.current);
     revealTimerRef.current = setTimeout(() => {

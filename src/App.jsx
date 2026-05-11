@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import './App.css';
 
 function MobilePrevDay({ prevAnswer }) {
@@ -27,6 +27,7 @@ import { useDailyWord } from './hooks/useDailyWord';
 import { useGame } from './hooks/useGame';
 import { useStats } from './hooks/useStats';
 import { useAuth } from './hooks/useAuth';
+import { syncFromRemote } from './lib/gameSync';
 import { todayISO, previousDay } from './utils/dateUtils';
 import { getAllGameStates } from './utils/storage';
 
@@ -37,13 +38,24 @@ export default function App() {
   const [showAuth, setShowAuth] = useState(false);
   const [statsKey, setStatsKey] = useState(0);
 
-  const { username, signIn, signUp, signOut } = useAuth();
+  const { user, username, signIn, signUp, signOut } = useAuth();
+  const prevUserId = useRef(null);
+
+  useEffect(() => {
+    const userId = user?.id ?? null;
+    if (userId && userId !== prevUserId.current) {
+      prevUserId.current = userId;
+      syncFromRemote(userId).then(() => setStatsKey(k => k + 1)).catch(() => {});
+    } else if (!userId) {
+      prevUserId.current = null;
+    }
+  }, [user]);
 
   const { isValidWord } = useWordList();
   const { answer } = useDailyWord(selectedDate);
   const { answer: prevAnswer } = useDailyWord(previousDay(selectedDate));
 
-  const game = useGame({ answer, dateStr: selectedDate, isValidWord });
+  const game = useGame({ answer, dateStr: selectedDate, isValidWord, userId: user?.id });
 
   const [lastKnownStatus, setLastKnownStatus] = useState(game.status);
   if (game.status !== lastKnownStatus) {
