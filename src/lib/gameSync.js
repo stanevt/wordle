@@ -1,5 +1,6 @@
 import { supabase } from './supabase';
 import { saveGameState, getAllGameStates } from '../utils/storage';
+import { STATE_STORAGE_PREFIX } from '../utils/constants';
 
 export async function upsertResult(userId, date, guesses, status) {
   await supabase
@@ -14,7 +15,17 @@ export async function syncFromRemote(userId) {
     .eq('user_id', userId);
   if (error) throw error;
 
-  // Supabase is the source of truth — overwrite local with remote data
+  const remoteDates = new Set(data.map(r => r.date));
+
+  // Remove any local completed game states not present in Supabase
+  const localStates = getAllGameStates();
+  for (const [date, state] of Object.entries(localStates)) {
+    if ((state.status === 'won' || state.status === 'lost') && !remoteDates.has(date)) {
+      localStorage.removeItem(STATE_STORAGE_PREFIX + date);
+    }
+  }
+
+  // Write remote results to localStorage
   for (const row of data) {
     if (row.status === 'won' || row.status === 'lost') {
       saveGameState(row.date, { guesses: row.guesses, status: row.status });
