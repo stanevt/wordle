@@ -21,6 +21,7 @@ import Keyboard from './components/Keyboard/Keyboard';
 import Calendar from './components/Calendar/Calendar';
 import StatsModal from './components/StatsModal/StatsModal';
 import AuthModal from './components/AuthModal/AuthModal';
+import EasterEgg from './components/EasterEgg';
 import Toast from './components/Toast';
 import { useWordList } from './hooks/useWordList';
 import { useDailyWord } from './hooks/useDailyWord';
@@ -101,12 +102,6 @@ export default function App() {
         <section className="game-area">
           <div className="board-wrapper">
             <Toast message={game.toastMessage} />
-            {game.status === 'won' && game.guesses.length === 2 && (
-              <p className="easter-egg">CHEATER!</p>
-            )}
-            {game.status === 'won' && game.guesses.length === 6 && (
-              <p className="easter-egg">ALMOST BECAME THE STRIKE OUT QUEEN</p>
-            )}
             <Board
               guesses={game.guesses}
               evaluations={game.evaluations}
@@ -152,6 +147,14 @@ export default function App() {
         onClose={() => setShowAuth(false)}
         onSignIn={signIn}
         onSignUp={signUp}
+      />
+
+      <EasterEgg
+        message={
+          game.status === 'won' && game.guesses.length === 2 ? 'CHEATER!' :
+          game.status === 'won' && game.guesses.length === 6 ? 'ALMOST BECAME THE STRIKE OUT QUEEN' :
+          null
+        }
       />
     </div>
   );
