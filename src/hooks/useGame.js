@@ -160,6 +160,8 @@ export function useGame({ answer, dateStr, isValidWord }) {
   useEffect(() => {
     function onKeyDown(e) {
       if (e.ctrlKey || e.metaKey || e.altKey) return;
+      const tag = document.activeElement?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA') return;
       handleKey(e.key);
     }
     window.addEventListener('keydown', onKeyDown);
