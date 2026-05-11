@@ -136,12 +136,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-wrap: wrap;
   gap: 10px;
   background: var(--color-key-bg);
   border-radius: 8px;
   padding: 12px 16px;
-  text-align: center;
+}
+
+.champion-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .champion-crown {
@@ -158,9 +162,8 @@
 
 .champion-guesses {
   font-size: 0.78rem;
-  color: #fff;
+  color: var(--color-text);
   font-weight: 700;
-  margin-left: 2px;
 }
 
 .champion-empty {
@@ -189,12 +192,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-wrap: wrap;
   gap: 10px;
   background: var(--color-key-bg);
   border-radius: 8px;
   padding: 12px 16px;
-  text-align: center;
+}
+
+.striker-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .striker-icon {
@@ -211,8 +218,8 @@
 
 .striker-label {
   font-size: 0.78rem;
-  color: var(--color-text-muted);
-  margin-left: 2px;
+  color: var(--color-text);
+  font-weight: 700;
 }
 
 .striker-empty {

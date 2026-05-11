@@ -53,10 +53,12 @@ export default function StatsModal({ isOpen, onClose, stats }) {
               <svg className="champion-crown" viewBox="0 0 24 24" fill="currentColor" width="20" height="20" aria-hidden="true">
                 <path d="M2 20h20v-2H2v2zm2-4h16l-2-8-4 3-2-6-2 6-4-3-2 8z"/>
               </svg>
-              <span className="champion-name">{champion.username}</span>
-              <span className="champion-guesses">
-                {champion.guess_count} {champion.guess_count === 1 ? 'guess' : 'guesses'}
-              </span>
+              <div className="champion-info">
+                <span className="champion-name">{champion.username}</span>
+                <span className="champion-guesses">
+                  {champion.guess_count} {champion.guess_count === 1 ? 'guess' : 'guesses'}
+                </span>
+              </div>
             </div>
           ) : (
             <p className="champion-empty">No winner yet today — be the first!</p>
@@ -70,8 +72,10 @@ export default function StatsModal({ isOpen, onClose, stats }) {
               <svg className="striker-icon" viewBox="0 0 24 24" fill="currentColor" width="20" height="20" aria-hidden="true">
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
               </svg>
-              <span className="striker-name">{striker.username}</span>
-              <span className="striker-label">struck out</span>
+              <div className="striker-info">
+                <span className="striker-name">{striker.username}</span>
+                <span className="striker-label">struck out</span>
+              </div>
             </div>
           ) : (
             <p className="striker-empty">No strike outs today — impressive!</p>
