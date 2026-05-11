@@ -91,6 +91,10 @@
     position: relative;
   }
 
+  .game-area {
+    width: 100%;
+  }
+
   /* Hide desktop sidebar on mobile */
   .sidebar {
     display: none;
