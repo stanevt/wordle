@@ -80,11 +80,13 @@ export function useGame({ answer, dateStr, isValidWord, userId }) {
 
   // Reset when date or answer changes
   useEffect(() => {
-    if (dateStr !== prevDateStr.current || (answer && answer !== prevAnswer.current && prevAnswer.current === null)) {
+    if (dateStr !== prevDateStr.current) {
+      // Date changed — don't use answer yet, it may still be the previous date's answer
       prevDateStr.current = dateStr;
-      prevAnswer.current = answer;
-      dispatch({ type: 'RESET', dateStr, answer });
-    } else if (answer && !prevAnswer.current) {
+      prevAnswer.current = null;
+      dispatch({ type: 'RESET', dateStr, answer: null });
+    } else if (answer && answer !== prevAnswer.current) {
+      // Answer arrived (or changed) for the current date
       prevAnswer.current = answer;
       dispatch({ type: 'RESET', dateStr, answer });
     }
