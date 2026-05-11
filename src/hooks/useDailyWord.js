@@ -21,7 +21,7 @@ export function useDailyWord(dateStr) {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 3000);
 
-    fetch(`${NYT_API_BASE}/${dateStr}.json`, { signal: controller.signal })
+    fetch(`${NYT_API_BASE}?date=${dateStr}`, { signal: controller.signal })
       .then(r => r.json())
       .then(json => {
         clearTimeout(timeout);
