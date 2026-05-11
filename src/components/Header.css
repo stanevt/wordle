@@ -153,6 +153,11 @@
   background: var(--color-key-bg);
 }
 
+.auth-dropdown-item--danger {
+  color: #e53e3e;
+  border-top: 1px solid var(--color-border);
+}
+
 .mobile-only { display: none; }
 .desktop-only { display: flex; }
 

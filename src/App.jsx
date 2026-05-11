@@ -28,6 +28,7 @@ import { useDailyWord } from './hooks/useDailyWord';
 import { useGame } from './hooks/useGame';
 import { useStats } from './hooks/useStats';
 import { useAuth } from './hooks/useAuth';
+import { useTheme } from './hooks/useTheme';
 import { syncFromRemote } from './lib/gameSync';
 import { todayISO, previousDay } from './utils/dateUtils';
 import { getAllGameStates } from './utils/storage';
@@ -40,6 +41,7 @@ export default function App() {
   const [statsKey, setStatsKey] = useState(0);
 
   const { user, username, signIn, signUp, signOut } = useAuth();
+  const { light, toggleTheme } = useTheme();
   const prevUserId = useRef(null);
 
   useEffect(() => {
@@ -93,6 +95,8 @@ export default function App() {
         onCalendarClick={() => setShowCalendar(v => !v)}
         onAuthClick={() => setShowAuth(true)}
         onSignOut={signOut}
+        onToggleTheme={toggleTheme}
+        lightMode={light}
         username={username}
         prevAnswer={prevAnswer}
         selectedDate={selectedDate}
