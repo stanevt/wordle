@@ -158,7 +158,8 @@
 
 .champion-guesses {
   font-size: 0.78rem;
-  color: var(--color-text-muted);
+  color: var(--color-correct);
+  font-weight: 700;
   margin-left: 2px;
 }
 
