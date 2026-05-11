@@ -44,7 +44,7 @@ export default function Header({ onStatsClick, onCalendarClick, onAuthClick, onS
         </button>
       </div>
 
-      <h1 className="header-title">Todd's<br/>Wordle</h1>
+      <h1 className="header-title">Todd's <br/>Wordle</h1>
 
       <div className="header-right">
         <button className="icon-btn" onClick={onToggleTheme} aria-label="Toggle theme">

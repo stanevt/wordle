@@ -48,7 +48,9 @@ export default function StatsModal({ isOpen, onClose, stats }) {
           <h3 className="champion-title">Today's Champion</h3>
           {champion ? (
             <div className="champion-card">
-              <span className="champion-crown">👑</span>
+              <svg className="champion-crown" viewBox="0 0 24 24" fill="currentColor" width="20" height="20" aria-hidden="true">
+                <path d="M2 20h20v-2H2v2zm2-4h16l-2-8-4 3-2-6-2 6-4-3-2 8z"/>
+              </svg>
               <span className="champion-name">{champion.username}</span>
               <span className="champion-guesses">
                 {champion.guess_count} {champion.guess_count === 1 ? 'guess' : 'guesses'}
