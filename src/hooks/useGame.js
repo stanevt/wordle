@@ -70,17 +70,22 @@ function reducer(state, action) {
   }
 }
 
-export function useGame({ answer, dateStr, isValidWord, userId }) {
+export function useGame({ answer, dateStr, isValidWord, userId, resetKey }) {
   const [state, dispatch] = useReducer(reducer, null, () =>
     initState(dateStr, answer)
   );
 
   const prevDateStr = useRef(dateStr);
   const prevAnswer = useRef(answer);
+  const prevResetKey = useRef(resetKey);
 
-  // Reset when date or answer changes
+  // Reset when date, answer, or auth state changes
   useEffect(() => {
-    if (dateStr !== prevDateStr.current) {
+    if (resetKey !== prevResetKey.current) {
+      prevResetKey.current = resetKey;
+      prevAnswer.current = answer;
+      dispatch({ type: 'RESET', dateStr, answer });
+    } else if (dateStr !== prevDateStr.current) {
       // Date changed — don't use answer yet, it may still be the previous date's answer
       prevDateStr.current = dateStr;
       prevAnswer.current = null;
@@ -90,7 +95,7 @@ export function useGame({ answer, dateStr, isValidWord, userId }) {
       prevAnswer.current = answer;
       dispatch({ type: 'RESET', dateStr, answer });
     }
-  }, [dateStr, answer]);
+  }, [dateStr, answer, resetKey]);
 
   const revealTimerRef = useRef(null);
   const shakeTimerRef = useRef(null);

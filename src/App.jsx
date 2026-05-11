@@ -39,6 +39,7 @@ export default function App() {
   const [showCalendar, setShowCalendar] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
   const [statsKey, setStatsKey] = useState(0);
+  const [gameKey, setGameKey] = useState(0);
 
   const { user, username, signIn, signUp, signOut } = useAuth();
   const { light, toggleTheme } = useTheme();
@@ -48,9 +49,13 @@ export default function App() {
     const userId = user?.id ?? null;
     if (userId && userId !== prevUserId.current) {
       prevUserId.current = userId;
-      syncFromRemote(userId).then(() => setStatsKey(k => k + 1)).catch(() => {});
-    } else if (!userId) {
+      syncFromRemote(userId).then(() => {
+        setStatsKey(k => k + 1);
+        setGameKey(k => k + 1);
+      }).catch(() => {});
+    } else if (!userId && prevUserId.current !== null) {
       prevUserId.current = null;
+      setGameKey(k => k + 1);
     }
   }, [user]);
 
@@ -58,7 +63,7 @@ export default function App() {
   const { answer } = useDailyWord(selectedDate);
   const { answer: prevAnswer } = useDailyWord(previousDay(selectedDate));
 
-  const game = useGame({ answer, dateStr: selectedDate, isValidWord, userId: user?.id });
+  const game = useGame({ answer, dateStr: selectedDate, isValidWord, userId: user?.id, resetKey: gameKey });
 
   const [lastKnownStatus, setLastKnownStatus] = useState(game.status);
   if (game.status !== lastKnownStatus) {
