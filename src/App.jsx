@@ -78,7 +78,8 @@ export default function App() {
       <Header
         onStatsClick={() => setShowStats(true)}
         onCalendarClick={() => setShowCalendar(v => !v)}
-        onAuthClick={() => username ? signOut() : setShowAuth(true)}
+        onAuthClick={() => setShowAuth(true)}
+        onSignOut={signOut}
         username={username}
         prevAnswer={prevAnswer}
         selectedDate={selectedDate}

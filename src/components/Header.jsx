@@ -1,10 +1,23 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './Header.css';
 
-export default function Header({ onStatsClick, onCalendarClick, onAuthClick, username, prevAnswer, selectedDate }) {
+export default function Header({ onStatsClick, onCalendarClick, onAuthClick, onSignOut, username, prevAnswer, selectedDate }) {
   const [revealed, setRevealed] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null);
 
   useEffect(() => { setRevealed(false); }, [prevAnswer]);
+
+  useEffect(() => {
+    if (!showDropdown) return;
+    function handleClick(e) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setShowDropdown(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [showDropdown]);
 
   return (
     <header className="header">
@@ -39,15 +52,30 @@ export default function Header({ onStatsClick, onCalendarClick, onAuthClick, use
             <path d="M3 3v18h18v-2H5V3H3zm4 12h2v3H7v-3zm4-5h2v8h-2v-8zm4-4h2v12h-2V6z"/>
           </svg>
         </button>
-        <button className="icon-btn auth-btn" onClick={onAuthClick} aria-label={username ? `Signed in as ${username}` : 'Sign in'} title={username ? username : 'Sign in'}>
-          {username ? (
-            <span className="auth-avatar">{username[0].toUpperCase()}</span>
-          ) : (
-            <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22">
-              <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
-            </svg>
+        <div className="auth-btn-wrap" ref={dropdownRef}>
+          <button
+            className="icon-btn auth-btn"
+            onClick={() => username ? setShowDropdown(v => !v) : onAuthClick()}
+            aria-label={username ? `Signed in as ${username}` : 'Sign in'}
+            title={username ? username : 'Sign in'}
+          >
+            {username ? (
+              <span className="auth-avatar">{username[0].toUpperCase()}</span>
+            ) : (
+              <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22">
+                <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+              </svg>
+            )}
+          </button>
+          {showDropdown && (
+            <div className="auth-dropdown">
+              <span className="auth-dropdown-user">{username}</span>
+              <button className="auth-dropdown-item" onClick={() => { setShowDropdown(false); onSignOut(); }}>
+                Log out
+              </button>
+            </div>
           )}
-        </button>
+        </div>
       </div>
     </header>
   );
