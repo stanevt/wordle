@@ -1,6 +1,16 @@
+import { useState, useEffect } from 'react';
+import { fetchTodaysChampion } from '../../lib/gameSync';
+import { todayISO } from '../../utils/dateUtils';
 import './StatsModal.css';
 
 export default function StatsModal({ isOpen, onClose, stats }) {
+  const [champion, setChampion] = useState(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    fetchTodaysChampion(todayISO()).then(setChampion).catch(() => {});
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const { gamesPlayed, gamesWon, winRate, currentStreak, maxStreak, guessDistribution } = stats;
@@ -32,6 +42,21 @@ export default function StatsModal({ isOpen, onClose, stats }) {
               </div>
             </div>
           ))}
+        </div>
+
+        <div className="champion-section">
+          <h3 className="champion-title">Today's Champion</h3>
+          {champion ? (
+            <div className="champion-card">
+              <span className="champion-crown">👑</span>
+              <span className="champion-name">{champion.username}</span>
+              <span className="champion-guesses">
+                {champion.guess_count} {champion.guess_count === 1 ? 'guess' : 'guesses'}
+              </span>
+            </div>
+          ) : (
+            <p className="champion-empty">No winner yet today — be the first!</p>
+          )}
         </div>
       </div>
     </div>

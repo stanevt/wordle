@@ -116,3 +116,53 @@
   background-color: var(--color-correct);
   color: #fff;
 }
+
+.champion-section {
+  margin-top: 24px;
+  border-top: 1px solid var(--color-border);
+  padding-top: 18px;
+}
+
+.champion-title {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-align: center;
+  margin: 0 0 12px;
+  color: var(--color-text);
+}
+
+.champion-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: var(--color-key-bg);
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+
+.champion-crown {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.champion-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text);
+  letter-spacing: 0.04em;
+}
+
+.champion-guesses {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  margin-left: 2px;
+}
+
+.champion-empty {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  margin: 0;
+}

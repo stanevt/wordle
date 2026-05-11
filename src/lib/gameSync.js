@@ -2,6 +2,12 @@ import { supabase } from './supabase';
 import { saveGameState, getAllGameStates } from '../utils/storage';
 import { STATE_STORAGE_PREFIX } from '../utils/constants';
 
+export async function fetchTodaysChampion(date) {
+  const { data, error } = await supabase.rpc('get_todays_champion', { today_date: date });
+  if (error) throw error;
+  return data?.[0] ?? null;
+}
+
 export async function upsertResult(userId, date, guesses, status) {
   await supabase
     .from('game_results')
