@@ -49,10 +49,10 @@ export default function App() {
     const userId = user?.id ?? null;
     if (userId && userId !== prevUserId.current) {
       prevUserId.current = userId;
-      syncFromRemote(userId).then(() => {
-        setStatsKey(k => k + 1);
-        setGameKey(k => k + 1);
-      }).catch(() => {});
+      syncFromRemote(userId)
+        .then(() => setStatsKey(k => k + 1))
+        .catch(() => {})
+        .finally(() => setGameKey(k => k + 1));
     } else if (!userId && prevUserId.current !== null) {
       prevUserId.current = null;
       setGameKey(k => k + 1);
