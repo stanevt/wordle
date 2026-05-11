@@ -47,13 +47,13 @@
 
 @media (max-width: 768px) {
   .keyboard {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    position: relative; /* Change from fixed to flow with flex layout */
+    bottom: auto;
+    left: auto;
+    right: auto;
     max-width: 100%;
     width: 100%;
-    padding: 8px 6px env(safe-area-inset-bottom, 12px);
+    padding: 8px 6px calc(8px + env(safe-area-inset-bottom, 12px));
     box-sizing: border-box;
     background-color: var(--color-background);
     z-index: 10;

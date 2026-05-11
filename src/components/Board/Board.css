@@ -3,6 +3,8 @@
   flex-direction: column;
   gap: 5px;
   perspective: 600px;
+  /* Prevent touch gestures from scrolling the board area */
+  touch-action: none;
 }
 
 @media (max-width: 768px) {

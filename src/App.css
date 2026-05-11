@@ -83,11 +83,12 @@
   .main {
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    /* reserve space for fixed keyboard: 8px top + 3×54px + 2×8px gaps + safe-area */
-    padding: 12px 8px calc(190px + env(safe-area-inset-bottom, 12px));
+    justify-content: space-between;
+    padding: 8px 8px 0;
     gap: 0;
     overflow: hidden;
+    height: calc(100dvh - 56px); /* Subtract header height (56px) */
+    position: relative;
   }
 
   /* Hide desktop sidebar on mobile */
