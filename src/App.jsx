@@ -20,11 +20,13 @@ import Board from './components/Board/Board';
 import Keyboard from './components/Keyboard/Keyboard';
 import Calendar from './components/Calendar/Calendar';
 import StatsModal from './components/StatsModal/StatsModal';
+import AuthModal from './components/AuthModal/AuthModal';
 import Toast from './components/Toast';
 import { useWordList } from './hooks/useWordList';
 import { useDailyWord } from './hooks/useDailyWord';
 import { useGame } from './hooks/useGame';
 import { useStats } from './hooks/useStats';
+import { useAuth } from './hooks/useAuth';
 import { todayISO, previousDay } from './utils/dateUtils';
 import { getAllGameStates } from './utils/storage';
 
@@ -32,7 +34,10 @@ export default function App() {
   const [selectedDate, setSelectedDate] = useState(todayISO);
   const [showStats, setShowStats] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
+  const [showAuth, setShowAuth] = useState(false);
   const [statsKey, setStatsKey] = useState(0);
+
+  const { username, signIn, signUp, signOut } = useAuth();
 
   const { isValidWord } = useWordList();
   const { answer } = useDailyWord(selectedDate);
@@ -73,6 +78,8 @@ export default function App() {
       <Header
         onStatsClick={() => setShowStats(true)}
         onCalendarClick={() => setShowCalendar(v => !v)}
+        onAuthClick={() => username ? signOut() : setShowAuth(true)}
+        username={username}
         prevAnswer={prevAnswer}
         selectedDate={selectedDate}
       />
@@ -125,6 +132,13 @@ export default function App() {
         isOpen={showStats}
         onClose={() => setShowStats(false)}
         stats={stats}
+      />
+
+      <AuthModal
+        isOpen={showAuth}
+        onClose={() => setShowAuth(false)}
+        onSignIn={signIn}
+        onSignUp={signUp}
       />
     </div>
   );

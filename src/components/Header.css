@@ -95,6 +95,20 @@
   margin-left: 2px;
 }
 
+.auth-avatar {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--color-correct);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
 .mobile-only { display: none; }
 .desktop-only { display: flex; }
 
