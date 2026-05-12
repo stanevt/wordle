@@ -154,7 +154,7 @@ export function useGame({ answer, dateStr, isValidWord, userId, username, resetK
         );
       }
     }, REVEAL_DURATION_MS);
-  }, [state.status, state.revealingRow, state.currentInput, state.guesses, answer, dateStr, isValidWord]);
+  }, [state.status, state.revealingRow, state.currentInput, state.guesses, answer, dateStr, isValidWord, userId, username]);
 
   const handleKey = useCallback((key) => {
     if (key === 'Enter') {

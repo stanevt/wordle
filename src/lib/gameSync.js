@@ -2,6 +2,23 @@ import { supabase } from './supabase';
 import { saveGameState, getAllGameStates } from '../utils/storage';
 import { STATE_STORAGE_PREFIX } from '../utils/constants';
 
+function normalizeGuesses(guesses) {
+  if (Array.isArray(guesses)) return guesses;
+  if (typeof guesses === 'string') {
+    try {
+      const parsed = JSON.parse(guesses);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+  return [];
+}
+
+function displayName(row) {
+  return row.username || `User ${row.user_id.slice(0, 5)}`;
+}
+
 export async function fetchDailyLeaderboard(date) {
   const { data, error } = await supabase
     .from('game_results')
@@ -13,21 +30,32 @@ export async function fetchDailyLeaderboard(date) {
       created_at
     `)
     .eq('date', date)
-    .eq('status', 'won')
-    .order('guess_count', { ascending: true })
-    .order('created_at', { ascending: true })
-    .limit(2);
+    .eq('status', 'won');
 
   if (error) throw error;
 
-  return data.map(row => ({
-    username: row.username || `User ${row.user_id.slice(0, 5)}`,
-    guesses: row.guesses,
-    guessCount: row.guesses.length
-  }));
+  return data
+    .map(row => {
+      const guesses = normalizeGuesses(row.guesses);
+      return {
+        username: displayName(row),
+        guesses,
+        guessCount: guesses.length,
+        createdAt: row.created_at
+      };
+    })
+    .sort((a, b) => {
+      if (a.guessCount !== b.guessCount) return a.guessCount - b.guessCount;
+      return new Date(a.createdAt) - new Date(b.createdAt);
+    })
+    .slice(0, 2);
 }
 
 export async function fetchTodaysStriker(date) {
+  const { data: rpcData, error: rpcError } = await supabase.rpc('get_todays_striker', { today_date: date });
+  const rpcRow = Array.isArray(rpcData) ? rpcData[0] : rpcData;
+  if (!rpcError && rpcRow?.username) return { username: rpcRow.username };
+
   const { data, error } = await supabase
     .from('game_results')
     .select('user_id, username')
@@ -39,7 +67,7 @@ export async function fetchTodaysStriker(date) {
   if (error) throw error;
   if (!data?.[0]) return null;
   return {
-    username: data[0].username || `User ${data[0].user_id.slice(0, 5)}`
+    username: displayName(data[0])
   };
 }
 
