@@ -19,7 +19,22 @@ function displayName(row) {
   return row.username || `User ${row.user_id.slice(0, 5)}`;
 }
 
+function normalizeLeader(row) {
+  const guesses = normalizeGuesses(row.guesses);
+  return {
+    username: row.username || (row.user_id ? displayName(row) : 'Unknown'),
+    guesses,
+    guessCount: row.guess_count ?? guesses.length,
+    createdAt: row.created_at
+  };
+}
+
 export async function fetchDailyLeaderboard(date) {
+  const { data: rpcData, error: rpcError } = await supabase.rpc('get_daily_leaderboard', { today_date: date });
+  if (!rpcError && Array.isArray(rpcData)) {
+    return rpcData.map(normalizeLeader);
+  }
+
   const { data, error } = await supabase
     .from('game_results')
     .select(`
@@ -35,15 +50,7 @@ export async function fetchDailyLeaderboard(date) {
   if (error) throw error;
 
   return data
-    .map(row => {
-      const guesses = normalizeGuesses(row.guesses);
-      return {
-        username: displayName(row),
-        guesses,
-        guessCount: guesses.length,
-        createdAt: row.created_at
-      };
-    })
+    .map(normalizeLeader)
     .sort((a, b) => {
       if (a.guessCount !== b.guessCount) return a.guessCount - b.guessCount;
       return new Date(a.createdAt) - new Date(b.createdAt);
