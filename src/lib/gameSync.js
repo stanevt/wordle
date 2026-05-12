@@ -30,32 +30,9 @@ function normalizeLeader(row) {
 }
 
 export async function fetchDailyLeaderboard(date) {
-  const { data: rpcData, error: rpcError } = await supabase.rpc('get_daily_leaderboard', { today_date: date });
-  if (!rpcError && Array.isArray(rpcData)) {
-    return rpcData.map(normalizeLeader);
-  }
-
-  const { data, error } = await supabase
-    .from('game_results')
-    .select(`
-      user_id,
-      username,
-      guesses,
-      status,
-      created_at
-    `)
-    .eq('date', date)
-    .eq('status', 'won');
-
+  const { data, error } = await supabase.rpc('get_daily_leaderboard', { today_date: date });
   if (error) throw error;
-
-  return data
-    .map(normalizeLeader)
-    .sort((a, b) => {
-      if (a.guessCount !== b.guessCount) return a.guessCount - b.guessCount;
-      return new Date(a.createdAt) - new Date(b.createdAt);
-    })
-    .slice(0, 2);
+  return (data || []).map(normalizeLeader);
 }
 
 export async function fetchTodaysStriker(date) {

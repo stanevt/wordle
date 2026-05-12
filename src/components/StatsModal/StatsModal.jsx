@@ -6,6 +6,7 @@ import './StatsModal.css';
 
 export default function StatsModal({ isOpen, onClose, stats, selectedDate, currentUserStatus, answer }) {
   const [leaders, setLeaders] = useState([]);
+  const [leaderboardError, setLeaderboardError] = useState(false);
   const [striker, setStriker] = useState(null);
   const [viewingPlayer, setViewingPlayer] = useState(null);
 
@@ -15,11 +16,15 @@ export default function StatsModal({ isOpen, onClose, stats, selectedDate, curre
   useEffect(() => {
     if (!isOpen) return;
     setLeaders([]);
+    setLeaderboardError(false);
     setStriker(null);
 
     fetchDailyLeaderboard(dateToFetch)
       .then(setLeaders)
-      .catch(console.error);
+      .catch(error => {
+        console.error(error);
+        setLeaderboardError(true);
+      });
 
     fetchTodaysStriker(dateToFetch)
       .then(setStriker)
@@ -28,7 +33,7 @@ export default function StatsModal({ isOpen, onClose, stats, selectedDate, curre
 
   if (!isOpen) return null;
 
-  const { gamesPlayed, gamesWon, winRate, currentStreak, maxStreak, guessDistribution } = stats;
+  const { gamesPlayed, winRate, currentStreak, maxStreak, guessDistribution } = stats;
   const maxDist = Math.max(...guessDistribution, 1);
 
   const champion = leaders[0];
@@ -72,7 +77,9 @@ export default function StatsModal({ isOpen, onClose, stats, selectedDate, curre
           <div className="champion-section">
             <h3 className="champion-title">Leaderboard</h3>
             <div className="leader-cards">
-              {champion ? (
+              {leaderboardError ? (
+                <p className="champion-empty">Leaderboard unavailable</p>
+              ) : champion ? (
                 <div className="champion-card">
                   <div className="champion-rank">
                     <svg className="champion-crown" viewBox="0 0 24 24" fill="currentColor" width="20" height="20" aria-hidden="true">
