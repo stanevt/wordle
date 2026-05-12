@@ -30,14 +30,17 @@ export async function fetchDailyLeaderboard(date) {
 export async function fetchTodaysStriker(date) {
   const { data, error } = await supabase
     .from('game_results')
-    .select('username')
+    .select('user_id, username')
     .eq('date', date)
     .eq('status', 'lost')
     .order('created_at', { ascending: false })
     .limit(1);
 
   if (error) throw error;
-  return data?.[0] ?? null;
+  if (!data?.[0]) return null;
+  return {
+    username: data[0].username || `User ${data[0].user_id.slice(0, 5)}`
+  };
 }
 
 export async function upsertResult(userId, date, guesses, status, username) {
