@@ -14,7 +14,7 @@ export async function fetchDailyLeaderboard(date) {
     `)
     .eq('date', date)
     .eq('status', 'won')
-    .order('guesses', { ascending: true }) // Note: orders by array length or content? Better to rely on count if possible.
+    .order('guess_count', { ascending: true })
     .order('created_at', { ascending: true })
     .limit(2);
 
