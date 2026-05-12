@@ -12,9 +12,11 @@
 .view-modal {
   background: var(--color-surface);
   border-radius: 12px;
-  padding: 32px;
-  max-width: 320px;
-  width: 90%;
+  padding: 30px 26px 26px;
+  max-width: 380px;
+  width: min(92vw, 380px);
+  max-height: min(90dvh, 620px);
+  overflow: auto;
   position: relative;
   border: 1px solid var(--color-border);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
@@ -39,11 +41,29 @@
   letter-spacing: 0.1em;
   margin: 0 0 24px;
   color: var(--color-text);
+  overflow-wrap: anywhere;
 }
 
 .view-board {
+  --view-tile-size: clamp(42px, 13vw, 56px);
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 4px;
   align-items: center;
+}
+
+.view-board .row {
+  gap: 4px;
+}
+
+.view-board .tile {
+  width: var(--view-tile-size);
+  height: var(--view-tile-size);
+  font-size: calc(var(--view-tile-size) * 0.48);
+}
+
+@media (max-width: 480px) {
+  .view-modal {
+    padding: 28px 18px 22px;
+  }
 }
