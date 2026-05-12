@@ -4,7 +4,7 @@ import { todayISO } from '../../utils/dateUtils';
 import ViewBoardModal from '../ViewBoardModal/ViewBoardModal';
 import './StatsModal.css';
 
-export default function StatsModal({ isOpen, onClose, stats, selectedDate, currentUserStatus, answer }) {
+export default function StatsModal({ isOpen, onClose, stats, selectedDate, currentUserStatus, answer, isAuthenticated }) {
   const [leaders, setLeaders] = useState([]);
   const [leaderboardError, setLeaderboardError] = useState(false);
   const [striker, setStriker] = useState(null);
@@ -21,6 +21,8 @@ export default function StatsModal({ isOpen, onClose, stats, selectedDate, curre
     setStriker(null);
     setStrikerError(false);
 
+    if (!isAuthenticated) return;
+
     fetchDailyLeaderboard(dateToFetch)
       .then(setLeaders)
       .catch(error => {
@@ -34,7 +36,7 @@ export default function StatsModal({ isOpen, onClose, stats, selectedDate, curre
         console.error(error);
         setStrikerError(true);
       });
-  }, [isOpen, dateToFetch]);
+  }, [isOpen, dateToFetch, isAuthenticated]);
 
   if (!isOpen) return null;
 
@@ -79,85 +81,89 @@ export default function StatsModal({ isOpen, onClose, stats, selectedDate, curre
             ))}
           </div>
 
-          <div className="champion-section">
-            <h3 className="champion-title">Leaderboard</h3>
-            <div className="leader-cards">
-              {leaderboardError ? (
-                <p className="champion-empty">Leaderboard unavailable</p>
-              ) : champion ? (
-                <div className="champion-card">
-                  <div className="champion-rank">
-                    <svg className="champion-crown" viewBox="0 0 24 24" fill="currentColor" width="20" height="20" aria-hidden="true">
-                      <path d="M2 20h20v-2H2v2zm2-4h16l-2-8-4 3-2-6-2 6-4-3-2 8z"/>
-                    </svg>
-                  </div>
-                  <div className="champion-info">
-                    <span className="champion-name">{champion.username}</span>
-                    <span className="champion-guesses">
-                      {champion.guessCount} {champion.guessCount === 1 ? 'guess' : 'guesses'}
-                    </span>
-                  </div>
-                  {canViewBoards && (
-                    <button
-                      className="view-board-btn"
-                      onClick={() => setViewingPlayer(champion)}
-                      title="View board"
-                    >
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+          {isAuthenticated && (
+            <div className="champion-section">
+              <h3 className="champion-title">Leaderboard</h3>
+              <div className="leader-cards">
+                {leaderboardError ? (
+                  <p className="champion-empty">Leaderboard unavailable</p>
+                ) : champion ? (
+                  <div className="champion-card">
+                    <div className="champion-rank">
+                      <svg className="champion-crown" viewBox="0 0 24 24" fill="currentColor" width="20" height="20" aria-hidden="true">
+                        <path d="M2 20h20v-2H2v2zm2-4h16l-2-8-4 3-2-6-2 6-4-3-2 8z"/>
                       </svg>
-                    </button>
-                  )}
+                    </div>
+                    <div className="champion-info">
+                      <span className="champion-name">{champion.username}</span>
+                      <span className="champion-guesses">
+                        {champion.guessCount} {champion.guessCount === 1 ? 'guess' : 'guesses'}
+                      </span>
+                    </div>
+                    {canViewBoards && (
+                      <button
+                        className="view-board-btn"
+                        onClick={() => setViewingPlayer(champion)}
+                        title="View board"
+                      >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
+                          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                        </svg>
+                      </button>
+                    )}
+                  </div>
+                ) : (
+                  <p className="champion-empty">No winners yet — be the first!</p>
+                )}
+
+                {runnerUp && (
+                  <div className="champion-card runner-up">
+                    <div className="champion-rank">
+                      <span className="runner-up-label">2nd</span>
+                    </div>
+                    <div className="champion-info">
+                      <span className="champion-name">{runnerUp.username}</span>
+                      <span className="champion-guesses">
+                        {runnerUp.guessCount} {runnerUp.guessCount === 1 ? 'guess' : 'guesses'}
+                      </span>
+                    </div>
+                    {canViewBoards && (
+                      <button
+                        className="view-board-btn"
+                        onClick={() => setViewingPlayer(runnerUp)}
+                        title="View board"
+                      >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
+                          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                        </svg>
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {isAuthenticated && (
+            <div className="striker-section">
+              <h3 className="striker-title">Wall of Shame</h3>
+              {strikerError ? (
+                <p className="striker-empty">Wall of Shame unavailable</p>
+              ) : striker ? (
+                <div className="striker-card">
+                  <svg className="striker-icon" viewBox="0 0 24 24" fill="currentColor" width="20" height="20" aria-hidden="true">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                  </svg>
+                  <div className="striker-info">
+                    <span className="striker-name">{striker.username}</span>
+                    <span className="striker-label">struck out</span>
+                  </div>
                 </div>
               ) : (
-                <p className="champion-empty">No winners yet — be the first!</p>
-              )}
-
-              {runnerUp && (
-                <div className="champion-card runner-up">
-                  <div className="champion-rank">
-                    <span className="runner-up-label">2nd</span>
-                  </div>
-                  <div className="champion-info">
-                    <span className="champion-name">{runnerUp.username}</span>
-                    <span className="champion-guesses">
-                      {runnerUp.guessCount} {runnerUp.guessCount === 1 ? 'guess' : 'guesses'}
-                    </span>
-                  </div>
-                  {canViewBoards && (
-                    <button
-                      className="view-board-btn"
-                      onClick={() => setViewingPlayer(runnerUp)}
-                      title="View board"
-                    >
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
-                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
-                      </svg>
-                    </button>
-                  )}
-                </div>
+                <p className="striker-empty">No strike outs — impressive!</p>
               )}
             </div>
-          </div>
-
-          <div className="striker-section">
-            <h3 className="striker-title">Wall of Shame</h3>
-            {strikerError ? (
-              <p className="striker-empty">Wall of Shame unavailable</p>
-            ) : striker ? (
-              <div className="striker-card">
-                <svg className="striker-icon" viewBox="0 0 24 24" fill="currentColor" width="20" height="20" aria-hidden="true">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
-                </svg>
-                <div className="striker-info">
-                  <span className="striker-name">{striker.username}</span>
-                  <span className="striker-label">struck out</span>
-                </div>
-              </div>
-            ) : (
-              <p className="striker-empty">No strike outs — impressive!</p>
-            )}
-          </div>
+          )}
         </div>
       </div>
 

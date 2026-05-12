@@ -153,6 +153,7 @@ export default function App() {
         selectedDate={selectedDate}
         currentUserStatus={completedDates[selectedDate]}
         answer={answer}
+        isAuthenticated={!!user}
       />
 
       <AuthModal
