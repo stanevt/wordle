@@ -3,9 +3,9 @@ import { getAllGameStates } from '../utils/storage';
 import { todayISO, previousDay } from '../utils/dateUtils';
 import { WORDLE_START_DATE } from '../utils/constants';
 
-export function useStats(refreshKey) {
+export function useStats(refreshKey, userId) {
   return useMemo(() => {
-    const allStates = getAllGameStates();
+    const allStates = getAllGameStates(userId);
     const dates = Object.keys(allStates).sort();
 
     let gamesPlayed = 0;
@@ -67,5 +67,5 @@ export function useStats(refreshKey) {
 
     return { gamesPlayed, gamesWon, winRate, currentStreak, maxStreak, guessDistribution };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [refreshKey]);
+  }, [refreshKey, userId]);
 }

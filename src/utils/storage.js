@@ -1,18 +1,30 @@
 import { ANSWER_STORAGE_PREFIX, STATE_STORAGE_PREFIX, WORD_LIST_STORAGE_KEY } from './constants';
 
-export function loadGameState(dateStr) {
+function stateScope(scopeId) {
+  return scopeId || 'anon';
+}
+
+function stateStorageKey(dateStr, scopeId) {
+  return `${STATE_STORAGE_PREFIX}${stateScope(scopeId)}-${dateStr}`;
+}
+
+export function loadGameState(dateStr, scopeId) {
   try {
-    const raw = localStorage.getItem(STATE_STORAGE_PREFIX + dateStr);
+    const raw = localStorage.getItem(stateStorageKey(dateStr, scopeId));
     return raw ? JSON.parse(raw) : null;
   } catch {
     return null;
   }
 }
 
-export function saveGameState(dateStr, state) {
+export function saveGameState(dateStr, state, scopeId) {
   try {
-    localStorage.setItem(STATE_STORAGE_PREFIX + dateStr, JSON.stringify(state));
+    localStorage.setItem(stateStorageKey(dateStr, scopeId), JSON.stringify(state));
   } catch {}
+}
+
+export function removeGameState(dateStr, scopeId) {
+  localStorage.removeItem(stateStorageKey(dateStr, scopeId));
 }
 
 export function loadCachedAnswer(dateStr) {
@@ -35,12 +47,13 @@ export function saveWordList(rawText) {
   } catch {}
 }
 
-export function getAllGameStates() {
+export function getAllGameStates(scopeId) {
   const result = {};
+  const prefix = `${STATE_STORAGE_PREFIX}${stateScope(scopeId)}-`;
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
-    if (key && key.startsWith(STATE_STORAGE_PREFIX)) {
-      const dateStr = key.slice(STATE_STORAGE_PREFIX.length);
+    if (key && key.startsWith(prefix)) {
+      const dateStr = key.slice(prefix.length);
       try {
         result[dateStr] = JSON.parse(localStorage.getItem(key));
       } catch {}

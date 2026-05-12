@@ -4,8 +4,8 @@ import { evaluateGuess } from '../utils/tileEvaluation';
 import { loadGameState, saveGameState } from '../utils/storage';
 import { upsertResult } from '../lib/gameSync';
 
-function initState(dateStr, answer) {
-  const saved = loadGameState(dateStr);
+function initState(dateStr, answer, userId) {
+  const saved = loadGameState(dateStr, userId);
   if (saved && answer) {
     const evaluations = saved.guesses.map(g => evaluateGuess(g, answer));
     return {
@@ -32,7 +32,7 @@ function initState(dateStr, answer) {
 function reducer(state, action) {
   switch (action.type) {
     case 'RESET':
-      return initState(action.dateStr, action.answer);
+      return initState(action.dateStr, action.answer, action.userId);
     case 'ADD_LETTER':
       if (state.status !== 'playing' || state.revealingRow !== null) return state;
       if (state.currentInput.length >= WORD_LENGTH) return state;
@@ -72,7 +72,7 @@ function reducer(state, action) {
 
 export function useGame({ answer, dateStr, isValidWord, userId, username, resetKey }) {
   const [state, dispatch] = useReducer(reducer, null, () =>
-    initState(dateStr, answer)
+    initState(dateStr, answer, userId)
   );
 
   const prevDateStr = useRef(dateStr);
@@ -83,19 +83,20 @@ export function useGame({ answer, dateStr, isValidWord, userId, username, resetK
   useEffect(() => {
     if (resetKey !== prevResetKey.current) {
       prevResetKey.current = resetKey;
+      prevDateStr.current = dateStr;
       prevAnswer.current = answer;
-      dispatch({ type: 'RESET', dateStr, answer });
+      dispatch({ type: 'RESET', dateStr, answer, userId });
     } else if (dateStr !== prevDateStr.current) {
       // Date changed — don't use answer yet, it may still be the previous date's answer
       prevDateStr.current = dateStr;
       prevAnswer.current = null;
-      dispatch({ type: 'RESET', dateStr, answer: null });
+      dispatch({ type: 'RESET', dateStr, answer: null, userId });
     } else if (answer && answer !== prevAnswer.current) {
       // Answer arrived (or changed) for the current date
       prevAnswer.current = answer;
-      dispatch({ type: 'RESET', dateStr, answer });
+      dispatch({ type: 'RESET', dateStr, answer, userId });
     }
-  }, [dateStr, answer, resetKey]);
+  }, [dateStr, answer, resetKey, userId]);
 
   const revealTimerRef = useRef(null);
   const shakeTimerRef = useRef(null);
@@ -133,7 +134,7 @@ export function useGame({ answer, dateStr, isValidWord, userId, username, resetK
 
     // Persist immediately
     const newStatus = won ? 'won' : lost ? 'lost' : 'playing';
-    saveGameState(dateStr, { guesses: newGuesses, status: newStatus });
+    saveGameState(dateStr, { guesses: newGuesses, status: newStatus }, userId);
     if (userId) upsertResult(userId, dateStr, newGuesses, newStatus, username).catch(() => {});
 
     clearTimeout(revealTimerRef.current);

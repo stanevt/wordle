@@ -1,6 +1,5 @@
 import { supabase } from './supabase';
-import { saveGameState, getAllGameStates } from '../utils/storage';
-import { STATE_STORAGE_PREFIX } from '../utils/constants';
+import { saveGameState, getAllGameStates, removeGameState } from '../utils/storage';
 
 function normalizeGuesses(guesses) {
   if (Array.isArray(guesses)) return guesses;
@@ -63,17 +62,17 @@ export async function syncFromRemote(userId) {
   const remoteDates = new Set(data.map(r => r.date));
 
   // Remove any local completed game states not present in Supabase
-  const localStates = getAllGameStates();
+  const localStates = getAllGameStates(userId);
   for (const [date, state] of Object.entries(localStates)) {
     if ((state.status === 'won' || state.status === 'lost') && !remoteDates.has(date)) {
-      localStorage.removeItem(STATE_STORAGE_PREFIX + date);
+      removeGameState(date, userId);
     }
   }
 
   // Write remote results to localStorage
   for (const row of data) {
     if (row.status === 'won' || row.status === 'lost') {
-      saveGameState(row.date, { guesses: row.guesses, status: row.status });
+      saveGameState(row.date, { guesses: row.guesses, status: row.status }, userId);
     }
   }
 }

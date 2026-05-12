@@ -55,6 +55,7 @@ export default function App() {
         .finally(() => setGameKey(k => k + 1));
     } else if (!userId && prevUserId.current !== null) {
       prevUserId.current = null;
+      setStatsKey(k => k + 1);
       setGameKey(k => k + 1);
     }
   }, [user]);
@@ -73,10 +74,10 @@ export default function App() {
     }
   }
 
-  const stats = useStats(statsKey);
+  const stats = useStats(statsKey, user?.id);
 
   const completedDates = useMemo(() => {
-    const all = getAllGameStates();
+    const all = getAllGameStates(user?.id);
     const result = {};
     for (const [date, state] of Object.entries(all)) {
       if (state.status === 'won' || state.status === 'lost') {
@@ -85,7 +86,7 @@ export default function App() {
     }
     return result;
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [statsKey]);
+  }, [statsKey, user?.id]);
 
   function handleDateSelect(date) {
     setSelectedDate(date);
