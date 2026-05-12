@@ -8,6 +8,7 @@ export default function StatsModal({ isOpen, onClose, stats, selectedDate, curre
   const [leaders, setLeaders] = useState([]);
   const [leaderboardError, setLeaderboardError] = useState(false);
   const [striker, setStriker] = useState(null);
+  const [strikerError, setStrikerError] = useState(false);
   const [viewingPlayer, setViewingPlayer] = useState(null);
 
   const dateToFetch = selectedDate || todayISO();
@@ -18,6 +19,7 @@ export default function StatsModal({ isOpen, onClose, stats, selectedDate, curre
     setLeaders([]);
     setLeaderboardError(false);
     setStriker(null);
+    setStrikerError(false);
 
     fetchDailyLeaderboard(dateToFetch)
       .then(setLeaders)
@@ -28,7 +30,10 @@ export default function StatsModal({ isOpen, onClose, stats, selectedDate, curre
 
     fetchTodaysStriker(dateToFetch)
       .then(setStriker)
-      .catch(console.error);
+      .catch(error => {
+        console.error(error);
+        setStrikerError(true);
+      });
   }, [isOpen, dateToFetch]);
 
   if (!isOpen) return null;
@@ -137,7 +142,9 @@ export default function StatsModal({ isOpen, onClose, stats, selectedDate, curre
 
           <div className="striker-section">
             <h3 className="striker-title">Wall of Shame</h3>
-            {striker ? (
+            {strikerError ? (
+              <p className="striker-empty">Wall of Shame unavailable</p>
+            ) : striker ? (
               <div className="striker-card">
                 <svg className="striker-icon" viewBox="0 0 24 24" fill="currentColor" width="20" height="20" aria-hidden="true">
                   <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>

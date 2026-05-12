@@ -24,8 +24,7 @@ function normalizeLeader(row) {
   return {
     username: row.username || (row.user_id ? displayName(row) : 'Unknown'),
     guesses,
-    guessCount: row.guess_count ?? guesses.length,
-    createdAt: row.created_at
+    guessCount: row.guess_count ?? guesses.length
   };
 }
 
@@ -36,23 +35,10 @@ export async function fetchDailyLeaderboard(date) {
 }
 
 export async function fetchTodaysStriker(date) {
-  const { data: rpcData, error: rpcError } = await supabase.rpc('get_todays_striker', { today_date: date });
-  const rpcRow = Array.isArray(rpcData) ? rpcData[0] : rpcData;
-  if (!rpcError && rpcRow?.username) return { username: rpcRow.username };
-
-  const { data, error } = await supabase
-    .from('game_results')
-    .select('user_id, username')
-    .eq('date', date)
-    .eq('status', 'lost')
-    .order('created_at', { ascending: false })
-    .limit(1);
-
+  const { data, error } = await supabase.rpc('get_todays_striker', { today_date: date });
   if (error) throw error;
-  if (!data?.[0]) return null;
-  return {
-    username: displayName(data[0])
-  };
+  const row = Array.isArray(data) ? data[0] : data;
+  return row?.username ? { username: row.username } : null;
 }
 
 export async function upsertResult(userId, date, guesses, status, username) {
