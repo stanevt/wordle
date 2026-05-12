@@ -250,41 +250,45 @@
   letter-spacing: 0.08em;
   text-align: center;
   margin: 0 0 12px;
-  color: var(--color-text-muted);
+  color: var(--color-text);
 }
 
 .striker-card {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
-  background: var(--color-key-bg);
+  gap: 12px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: 8px;
-  padding: 12px 16px;
+  padding: 10px 14px;
 }
 
 .striker-info {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-direction: column;
+  flex-grow: 1;
 }
 
 .striker-icon {
-  color: var(--color-absent);
+  color: var(--color-text);
+  background: var(--color-border);
+  border-radius: 50%;
+  padding: 3px;
   flex-shrink: 0;
 }
 
 .striker-name {
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 700;
   color: var(--color-text);
-  letter-spacing: 0.04em;
+  line-height: 1.2;
 }
 
 .striker-label {
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   color: var(--color-text);
-  font-weight: 700;
+  font-weight: 600;
+  opacity: 0.86;
 }
 
 .striker-empty {
