@@ -149,6 +149,9 @@ export default function App() {
         isOpen={showStats}
         onClose={() => setShowStats(false)}
         stats={stats}
+        selectedDate={selectedDate}
+        currentUserStatus={completedDates[selectedDate]}
+        answer={answer}
       />
 
       <AuthModal

@@ -132,38 +132,77 @@
   color: var(--color-text);
 }
 
+.leader-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .champion-card {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
+  gap: 12px;
   background: var(--color-key-bg);
   border-radius: 8px;
-  padding: 12px 16px;
+  padding: 8px 16px;
+  position: relative;
+}
+
+.champion-rank {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  flex-shrink: 0;
+}
+
+.runner-up-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
 }
 
 .champion-info {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-direction: column;
+  flex-grow: 1;
 }
 
 .champion-crown {
-  color: var(--color-text);
-  flex-shrink: 0;
+  color: #f3c75e;
+  filter: drop-shadow(0 0 2px rgba(243, 199, 94, 0.4));
 }
 
 .champion-name {
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 700;
   color: var(--color-text);
-  letter-spacing: 0.04em;
+  line-height: 1.2;
 }
 
 .champion-guesses {
-  font-size: 0.78rem;
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+}
+
+.view-board-btn {
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  padding: 8px;
+  margin: -8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.view-board-btn:hover {
   color: var(--color-text);
-  font-weight: 700;
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .champion-empty {
@@ -171,6 +210,20 @@
   font-size: 0.82rem;
   color: var(--color-text-muted);
   margin: 0;
+}
+
+.stats-date-header {
+  text-align: center;
+  font-size: 0.7rem;
+  color: var(--color-correct);
+  background: rgba(83, 141, 78, 0.1);
+  padding: 4px 12px;
+  border-radius: 12px;
+  margin: -10px auto 20px;
+  width: fit-content;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .striker-section {

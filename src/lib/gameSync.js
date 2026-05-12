@@ -2,6 +2,31 @@ import { supabase } from './supabase';
 import { saveGameState, getAllGameStates } from '../utils/storage';
 import { STATE_STORAGE_PREFIX } from '../utils/constants';
 
+export async function fetchDailyLeaderboard(date) {
+  const { data, error } = await supabase
+    .from('game_results')
+    .select(`
+      user_id,
+      guesses,
+      status,
+      created_at,
+      profiles:user_id (username)
+    `)
+    .eq('date', date)
+    .eq('status', 'won')
+    .order('guesses', { ascending: true }) // Note: orders by array length or content? Better to rely on count if possible.
+    .order('created_at', { ascending: true })
+    .limit(2);
+
+  if (error) throw error;
+
+  return data.map(row => ({
+    username: row.profiles?.username || 'Unknown',
+    guesses: row.guesses,
+    guessCount: row.guesses.length
+  }));
+}
+
 export async function fetchTodaysChampion(date) {
   const { data, error } = await supabase.rpc('get_todays_champion', { today_date: date });
   if (error) throw error;
