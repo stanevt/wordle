@@ -70,7 +70,7 @@ function reducer(state, action) {
   }
 }
 
-export function useGame({ answer, dateStr, isValidWord, userId, resetKey }) {
+export function useGame({ answer, dateStr, isValidWord, userId, username, resetKey }) {
   const [state, dispatch] = useReducer(reducer, null, () =>
     initState(dateStr, answer)
   );
@@ -134,7 +134,7 @@ export function useGame({ answer, dateStr, isValidWord, userId, resetKey }) {
     // Persist immediately
     const newStatus = won ? 'won' : lost ? 'lost' : 'playing';
     saveGameState(dateStr, { guesses: newGuesses, status: newStatus });
-    if (userId) upsertResult(userId, dateStr, newGuesses, newStatus).catch(() => {});
+    if (userId) upsertResult(userId, dateStr, newGuesses, newStatus, username).catch(() => {});
 
     clearTimeout(revealTimerRef.current);
     revealTimerRef.current = setTimeout(() => {

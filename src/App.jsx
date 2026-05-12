@@ -63,7 +63,7 @@ export default function App() {
   const { answer } = useDailyWord(selectedDate);
   const { answer: prevAnswer } = useDailyWord(previousDay(selectedDate));
 
-  const game = useGame({ answer, dateStr: selectedDate, isValidWord, userId: user?.id, resetKey: gameKey });
+  const game = useGame({ answer, dateStr: selectedDate, isValidWord, userId: user?.id, username, resetKey: gameKey });
 
   const [lastKnownStatus, setLastKnownStatus] = useState(game.status);
   if (game.status !== lastKnownStatus) {
