@@ -3,10 +3,19 @@ import { getAllGameStates } from '../utils/storage';
 import { todayISO, previousDay } from '../utils/dateUtils';
 import { WORDLE_START_DATE } from '../utils/constants';
 
+function isCompletedResult(state) {
+  return state?.status === 'won' || state?.status === 'lost';
+}
+
+function isStreakEligible(state, dateStr) {
+  return isCompletedResult(state) && state.completedOn === dateStr;
+}
+
 export function useStats(refreshKey, userId) {
   return useMemo(() => {
     const allStates = getAllGameStates(userId);
     const dates = Object.keys(allStates).sort();
+    const today = todayISO();
 
     let gamesPlayed = 0;
     let gamesWon = 0;
@@ -15,7 +24,7 @@ export function useStats(refreshKey, userId) {
     for (const date of dates) {
       if (date < WORDLE_START_DATE) continue;
       const s = allStates[date];
-      if (s.status === 'playing') continue;
+      if (!isCompletedResult(s)) continue;
       gamesPlayed++;
       if (s.status === 'won') {
         gamesWon++;
@@ -28,41 +37,38 @@ export function useStats(refreshKey, userId) {
 
     // Current streak: walk backwards from today
     let currentStreak = 0;
-    let cursor = todayISO();
+    let cursor = today;
     while (cursor >= WORDLE_START_DATE) {
       const s = allStates[cursor];
-      if (s && s.status === 'won') {
+      if (isStreakEligible(s, cursor) && s.status === 'won') {
         currentStreak++;
         cursor = previousDay(cursor);
-      } else if (s && s.status === 'lost') {
+      } else if (isStreakEligible(s, cursor) && s.status === 'lost') {
         break;
-      } else if (!s && cursor < todayISO()) {
+      } else if (cursor < today) {
         break;
       } else {
         cursor = previousDay(cursor);
       }
     }
 
-    // Max streak: forward pass
+    // Max streak: only same-day completions participate
     let maxStreak = 0;
     let streak = 0;
     let prevDate = null;
     for (const date of dates) {
       if (date < WORDLE_START_DATE) continue;
       const s = allStates[date];
-      if (s.status === 'playing') continue;
-      if (s.status === 'won') {
-        if (prevDate && previousDay(date) === prevDate) {
-          streak++;
-        } else {
-          streak = 1;
-        }
-        maxStreak = Math.max(maxStreak, streak);
-        prevDate = date;
-      } else {
-        streak = 0;
-        prevDate = date;
+      if (!isStreakEligible(s, date) || s.status !== 'won') {
+        continue;
       }
+      if (prevDate && previousDay(date) === prevDate) {
+        streak++;
+      } else {
+        streak = 1;
+      }
+      maxStreak = Math.max(maxStreak, streak);
+      prevDate = date;
     }
 
     return { gamesPlayed, gamesWon, winRate, currentStreak, maxStreak, guessDistribution };

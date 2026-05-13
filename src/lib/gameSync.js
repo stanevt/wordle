@@ -40,7 +40,7 @@ export async function fetchTodaysStriker(date) {
   return row?.username ? { username: row.username } : null;
 }
 
-export async function upsertResult(userId, date, guesses, status, username) {
+export async function upsertResult(userId, date, guesses, status, username, completedOn) {
   await supabase
     .from('game_results')
     .upsert({
@@ -48,14 +48,15 @@ export async function upsertResult(userId, date, guesses, status, username) {
       date,
       guesses,
       status,
-      username
+      username,
+      completed_on: status === 'won' || status === 'lost' ? completedOn : null
     }, { onConflict: 'user_id,date' });
 }
 
 export async function syncFromRemote(userId) {
   const { data, error } = await supabase
     .from('game_results')
-    .select('date, guesses, status')
+    .select('date, guesses, status, completed_on')
     .eq('user_id', userId);
   if (error) throw error;
 
@@ -72,7 +73,11 @@ export async function syncFromRemote(userId) {
   // Write remote results to localStorage
   for (const row of data) {
     if (row.status === 'won' || row.status === 'lost') {
-      saveGameState(row.date, { guesses: row.guesses, status: row.status }, userId);
+      saveGameState(row.date, {
+        guesses: row.guesses,
+        status: row.status,
+        completedOn: row.completed_on || null,
+      }, userId);
     }
   }
 }

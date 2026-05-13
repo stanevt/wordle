@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useReducer, useRef } from 'react';
 import { MAX_GUESSES, WORD_LENGTH, REVEAL_DURATION_MS } from '../utils/constants';
 import { evaluateGuess } from '../utils/tileEvaluation';
+import { todayISO } from '../utils/dateUtils';
 import { loadGameState, saveGameState } from '../utils/storage';
 import { upsertResult } from '../lib/gameSync';
 
@@ -12,6 +13,7 @@ function initState(dateStr, answer, userId) {
       guesses: saved.guesses,
       evaluations,
       status: saved.status,
+      completedOn: saved.completedOn || null,
       currentInput: '',
       revealingRow: null,
       shakingRow: null,
@@ -22,6 +24,7 @@ function initState(dateStr, answer, userId) {
     guesses: [],
     evaluations: [],
     status: 'playing',
+    completedOn: null,
     currentInput: '',
     revealingRow: null,
     shakingRow: null,
@@ -62,6 +65,7 @@ function reducer(state, action) {
         ...state,
         revealingRow: null,
         status: action.status,
+        completedOn: action.completedOn,
         toastMessage: action.toastMessage,
       };
     }
@@ -131,11 +135,12 @@ export function useGame({ answer, dateStr, isValidWord, userId, username, resetK
     const newGuesses = [...state.guesses, input];
     const won = input === answer;
     const lost = !won && newGuesses.length >= MAX_GUESSES;
+    const completedOn = won || lost ? todayISO() : null;
 
     // Persist immediately
     const newStatus = won ? 'won' : lost ? 'lost' : 'playing';
-    saveGameState(dateStr, { guesses: newGuesses, status: newStatus }, userId);
-    if (userId) upsertResult(userId, dateStr, newGuesses, newStatus, username).catch(() => {});
+    saveGameState(dateStr, { guesses: newGuesses, status: newStatus, completedOn }, userId);
+    if (userId) upsertResult(userId, dateStr, newGuesses, newStatus, username, completedOn).catch(() => {});
 
     clearTimeout(revealTimerRef.current);
     revealTimerRef.current = setTimeout(() => {
@@ -146,7 +151,7 @@ export function useGame({ answer, dateStr, isValidWord, userId, username, resetK
       } else if (lost) {
         toastMsg = answer;
       }
-      dispatch({ type: 'FINISH_REVEAL', status: newStatus, toastMessage: toastMsg });
+      dispatch({ type: 'FINISH_REVEAL', status: newStatus, completedOn, toastMessage: toastMsg });
       if (toastMsg) {
         clearTimeout(toastTimerRef.current);
         toastTimerRef.current = setTimeout(
