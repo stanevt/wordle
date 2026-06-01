@@ -127,15 +127,20 @@
   min-width: 0;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 560px) {
   .score-date-row {
     flex-direction: column;
     gap: 10px;
+  }
+
+  .score-date-field {
+    width: 100%;
   }
 }
 
 .score-calculate-btn {
   height: 40px;
+  width: 100%;
   background: var(--color-correct);
   color: #fff;
   border: none;
