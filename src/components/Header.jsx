@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import './Header.css';
 
-export default function Header({ onStatsClick, onCalendarClick, onAuthClick, onSignOut, onToggleTheme, lightMode, username, prevAnswer, selectedDate }) {
+export default function Header({ onStatsClick, onCalendarClick, onAuthClick, onSignOut, onScoreClick, onToggleTheme, lightMode, username, prevAnswer, selectedDate }) {
   const [revealed, setRevealed] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
@@ -89,6 +89,9 @@ export default function Header({ onStatsClick, onCalendarClick, onAuthClick, onS
           {showDropdown && (
             <div className="auth-dropdown">
               <span className="auth-dropdown-user">{username}</span>
+              <button className="auth-dropdown-item" onClick={() => { setShowDropdown(false); onScoreClick(); }}>
+                Calculate Score
+              </button>
               <button className="auth-dropdown-item auth-dropdown-item--danger" onClick={() => { setShowDropdown(false); onSignOut(); }}>
                 Log out
               </button>

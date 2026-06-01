@@ -53,6 +53,17 @@ export async function upsertResult(userId, date, guesses, status, username, comp
     }, { onConflict: 'user_id,date' });
 }
 
+export async function fetchScoreComparison(username1, username2, startDate, endDate) {
+  const { data, error } = await supabase.rpc('get_score_comparison', {
+    p_username1: username1,
+    p_username2: username2,
+    p_start_date: startDate,
+    p_end_date: endDate,
+  });
+  if (error) throw error;
+  return data || [];
+}
+
 export async function syncFromRemote(userId) {
   const { data, error } = await supabase
     .from('game_results')

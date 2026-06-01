@@ -1,0 +1,264 @@
+.score-modal {
+  max-width: 460px;
+}
+
+.score-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.score-players-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.score-player-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.score-vs {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  padding-bottom: 8px;
+  flex-shrink: 0;
+}
+
+.score-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  font-weight: 700;
+}
+
+.score-username-you {
+  height: 36px;
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-text);
+  background: var(--color-key-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 0 10px;
+}
+
+.score-input {
+  height: 36px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  color: var(--color-text);
+  font-family: inherit;
+  font-size: 0.9rem;
+  padding: 0 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.score-input:focus {
+  outline: none;
+  border-color: var(--color-correct);
+}
+
+.score-input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.6);
+  cursor: pointer;
+}
+
+.score-date-row {
+  display: flex;
+  gap: 12px;
+}
+
+.score-date-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.score-calculate-btn {
+  height: 40px;
+  background: var(--color-correct);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.score-calculate-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.score-calculate-btn:not(:disabled):hover {
+  opacity: 0.88;
+}
+
+.score-error {
+  margin: 8px 0 0;
+  font-size: 0.82rem;
+  color: #e53e3e;
+  text-align: center;
+}
+
+.score-results {
+  margin-top: 20px;
+  border-top: 1px solid var(--color-border);
+  padding-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.score-tally {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.score-tally-player {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 80px;
+}
+
+.score-tally-player--right {
+  align-items: center;
+}
+
+.score-tally-name {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.score-tally-value {
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1;
+}
+
+.score-tally-value--winner {
+  color: var(--color-correct);
+}
+
+.score-tally-sep {
+  font-size: 1.8rem;
+  font-weight: 300;
+  color: var(--color-text-muted);
+  line-height: 1;
+  padding-bottom: 4px;
+}
+
+.score-warning {
+  margin: 0;
+  font-size: 0.78rem;
+  color: #c9831a;
+  background: rgba(201, 131, 26, 0.1);
+  border: 1px solid rgba(201, 131, 26, 0.25);
+  border-radius: 6px;
+  padding: 8px 12px;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.score-table-wrap {
+  max-height: 240px;
+  overflow-y: auto;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+}
+
+.score-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+.score-table thead th {
+  position: sticky;
+  top: 0;
+  background: var(--color-surface);
+  padding: 7px 10px;
+  text-align: center;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border);
+  font-weight: 700;
+}
+
+.score-table thead th:first-child {
+  text-align: left;
+}
+
+.score-table tbody tr + tr {
+  border-top: 1px solid var(--color-border);
+}
+
+.score-cell-date {
+  padding: 7px 10px;
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.score-cell {
+  padding: 7px 10px;
+  text-align: center;
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.score-cell-point {
+  padding: 7px 10px;
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.score-row--user1 .score-cell:first-of-type {
+  color: var(--color-correct);
+}
+
+.score-row--user2 .score-cell:last-of-type {
+  color: var(--color-correct);
+}
+
+.score-row--incomplete {
+  opacity: 0.5;
+}
+
+.score-empty {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  margin: 0;
+}

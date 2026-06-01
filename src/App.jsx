@@ -20,6 +20,7 @@ import Board from './components/Board/Board';
 import Keyboard from './components/Keyboard/Keyboard';
 import Calendar from './components/Calendar/Calendar';
 import StatsModal from './components/StatsModal/StatsModal';
+import ScoreComparisonModal from './components/ScoreComparisonModal/ScoreComparisonModal';
 import AuthModal from './components/AuthModal/AuthModal';
 import EasterEgg from './components/EasterEgg';
 import Toast from './components/Toast';
@@ -38,6 +39,7 @@ export default function App() {
   const [showStats, setShowStats] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
+  const [showScore, setShowScore] = useState(false);
   const [statsKey, setStatsKey] = useState(0);
   const [gameKey, setGameKey] = useState(0);
 
@@ -101,6 +103,7 @@ export default function App() {
         onCalendarClick={() => setShowCalendar(v => !v)}
         onAuthClick={() => setShowAuth(true)}
         onSignOut={signOut}
+        onScoreClick={() => setShowScore(true)}
         onToggleTheme={toggleTheme}
         lightMode={light}
         username={username}
@@ -154,6 +157,12 @@ export default function App() {
         currentUserStatus={completedDates[selectedDate]}
         answer={answer}
         isAuthenticated={!!user}
+      />
+
+      <ScoreComparisonModal
+        isOpen={showScore}
+        onClose={() => setShowScore(false)}
+        username={username}
       />
 
       <AuthModal
