@@ -203,6 +203,7 @@
 .score-table thead th {
   position: sticky;
   top: 0;
+  z-index: 1;
   background: var(--color-surface);
   padding: 7px 10px;
   text-align: center;
