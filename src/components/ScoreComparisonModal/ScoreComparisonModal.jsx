@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { todayISO } from '../../utils/dateUtils';
 import { fetchScoreComparison, fetchUsernames } from '../../lib/gameSync';
 import './ScoreComparisonModal.css';
@@ -74,6 +74,9 @@ export default function ScoreComparisonModal({ isOpen, onClose, username }) {
   const [scoreData, setScoreData] = useState(null);
   const [allUsernames, setAllUsernames] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const hasCalculatedRef = useRef(false);
+  const opponentRef = useRef(opponent);
+  opponentRef.current = opponent;
 
   useEffect(() => {
     if (!isOpen) {
@@ -81,10 +84,23 @@ export default function ScoreComparisonModal({ isOpen, onClose, username }) {
       setScoreData(null);
       setIsLoading(false);
       setShowSuggestions(false);
+      hasCalculatedRef.current = false;
       return;
     }
     fetchUsernames().then(setAllUsernames).catch(() => {});
   }, [isOpen]);
+
+  useEffect(() => {
+    if (!hasCalculatedRef.current) return;
+    const opp = opponentRef.current.trim();
+    if (!opp || !startDate || !endDate || startDate > endDate) return;
+    setIsLoading(true);
+    setError(null);
+    fetchScoreComparison(username, opp, startDate, endDate)
+      .then(rawRows => setScoreData(buildScoreData(rawRows)))
+      .catch(() => setError('Could not load comparison. Check the username and try again.'))
+      .finally(() => setIsLoading(false));
+  }, [startDate, endDate]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const filteredSuggestions = allUsernames.filter(u =>
     u !== username &&
@@ -97,6 +113,7 @@ export default function ScoreComparisonModal({ isOpen, onClose, username }) {
 
   async function handleCalculate() {
     const opp = opponent.trim();
+    hasCalculatedRef.current = true;
     setIsLoading(true);
     setError(null);
     setScoreData(null);

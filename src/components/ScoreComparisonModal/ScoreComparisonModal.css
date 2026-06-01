@@ -130,12 +130,7 @@
 @media (max-width: 480px) {
   .score-date-row {
     flex-direction: column;
-    align-items: center;
     gap: 10px;
-  }
-
-  .score-date-field {
-    width: 100%;
   }
 }
 
