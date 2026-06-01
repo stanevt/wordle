@@ -173,10 +173,10 @@ export default function ScoreComparisonModal({ isOpen, onClose, username }) {
               </div>
               <span className="score-tally-sep">–</span>
               <div className="score-tally-player score-tally-player--right">
+                <span className="score-tally-name">{opponent.trim()}</span>
                 <span className={`score-tally-value${scoreData.user2Score > scoreData.user1Score ? ' score-tally-value--winner' : ''}`}>
                   {scoreData.user2Score}
                 </span>
-                <span className="score-tally-name">{opponent.trim()}</span>
               </div>
             </div>
 
