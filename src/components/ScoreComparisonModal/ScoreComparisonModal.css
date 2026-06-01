@@ -124,6 +124,14 @@
   flex-direction: column;
   gap: 4px;
   flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 400px) {
+  .score-date-row {
+    flex-direction: column;
+    gap: 10px;
+  }
 }
 
 .score-calculate-btn {
