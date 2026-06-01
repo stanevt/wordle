@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { todayISO } from '../../utils/dateUtils';
-import { fetchScoreComparison } from '../../lib/gameSync';
+import { fetchScoreComparison, fetchUsernames } from '../../lib/gameSync';
 import './ScoreComparisonModal.css';
 
 function guessDisplay(guessCount, status) {
@@ -72,14 +72,24 @@ export default function ScoreComparisonModal({ isOpen, onClose, username }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [scoreData, setScoreData] = useState(null);
+  const [allUsernames, setAllUsernames] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   useEffect(() => {
     if (!isOpen) {
       setError(null);
       setScoreData(null);
       setIsLoading(false);
+      setShowSuggestions(false);
+      return;
     }
+    fetchUsernames().then(setAllUsernames).catch(() => {});
   }, [isOpen]);
+
+  const filteredSuggestions = allUsernames.filter(u =>
+    u !== username &&
+    (opponent.trim() === '' || u.toLowerCase().includes(opponent.toLowerCase().trim()))
+  );
 
   if (!isOpen) return null;
 
@@ -115,16 +125,33 @@ export default function ScoreComparisonModal({ isOpen, onClose, username }) {
             <span className="score-vs">vs.</span>
             <div className="score-player-block">
               <label className="score-label" htmlFor="score-opponent">Opponent</label>
-              <input
-                id="score-opponent"
-                className="score-input"
-                type="text"
-                placeholder="username"
-                value={opponent}
-                onChange={e => setOpponent(e.target.value)}
-                autoComplete="off"
-                spellCheck={false}
-              />
+              <div className="score-input-wrap">
+                <input
+                  id="score-opponent"
+                  className="score-input"
+                  type="text"
+                  placeholder="username"
+                  value={opponent}
+                  onChange={e => { setOpponent(e.target.value); setShowSuggestions(true); }}
+                  onFocus={() => setShowSuggestions(true)}
+                  onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
+                  autoComplete="off"
+                  spellCheck={false}
+                />
+                {showSuggestions && filteredSuggestions.length > 0 && (
+                  <div className="score-suggestions">
+                    {filteredSuggestions.map(u => (
+                      <button
+                        key={u}
+                        className="score-suggestion-item"
+                        onClick={() => { setOpponent(u); setShowSuggestions(false); }}
+                      >
+                        {u}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 

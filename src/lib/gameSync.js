@@ -53,6 +53,12 @@ export async function upsertResult(userId, date, guesses, status, username, comp
     }, { onConflict: 'user_id,date' });
 }
 
+export async function fetchUsernames() {
+  const { data, error } = await supabase.rpc('get_usernames');
+  if (error) throw error;
+  return (data || []).map(r => r.username).filter(Boolean);
+}
+
 export async function fetchScoreComparison(username1, username2, startDate, endDate) {
   const { data, error } = await supabase.rpc('get_score_comparison', {
     p_username1: username1,
