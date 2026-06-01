@@ -300,12 +300,13 @@
   white-space: nowrap;
 }
 
-.score-row--user1 .score-cell:first-of-type {
+.score-cell.cell--winner {
   color: var(--color-correct);
+  font-weight: 700;
 }
 
-.score-row--user2 .score-cell:last-of-type {
-  color: var(--color-correct);
+.score-cell.cell--strikeout {
+  color: #e53e3e;
 }
 
 .score-row--incomplete {

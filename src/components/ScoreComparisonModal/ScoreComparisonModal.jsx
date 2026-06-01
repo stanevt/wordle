@@ -9,6 +9,12 @@ function guessDisplay(guessCount, status) {
   return `${guessCount}/6`;
 }
 
+function cellClass(status, isWinner) {
+  if (status === 'lost') return 'cell--strikeout';
+  if (isWinner) return 'cell--winner';
+  return '';
+}
+
 function buildScoreData(rawRows) {
   let user1Score = 0;
   let user2Score = 0;
@@ -24,6 +30,8 @@ function buildScoreData(rawRows) {
         date: row.date,
         user1Display: guessDisplay(row.user1_guess_count, row.user1_status),
         user2Display: guessDisplay(row.user2_guess_count, row.user2_status),
+        user1CellClass: cellClass(row.user1_status, false),
+        user2CellClass: cellClass(row.user2_status, false),
         winner: 'incomplete',
         pointLabel: '—',
       };
@@ -52,6 +60,8 @@ function buildScoreData(rawRows) {
       date: row.date,
       user1Display: guessDisplay(row.user1_guess_count, row.user1_status),
       user2Display: guessDisplay(row.user2_guess_count, row.user2_status),
+      user1CellClass: cellClass(row.user1_status, winner === 'user1'),
+      user2CellClass: cellClass(row.user2_status, winner === 'user2'),
       winner,
       pointLabel: winner === 'user1' ? '◀' : winner === 'user2' ? '▶' : '=',
     };
@@ -245,8 +255,8 @@ export default function ScoreComparisonModal({ isOpen, onClose, username }) {
                     {scoreData.rows.map(row => (
                       <tr key={row.date} className={`score-row score-row--${row.winner}`}>
                         <td className="score-cell-date">{row.date}</td>
-                        <td className="score-cell">{row.user1Display}</td>
-                        <td className="score-cell">{row.user2Display}</td>
+                        <td className={`score-cell ${row.user1CellClass}`}>{row.user1Display}</td>
+                        <td className={`score-cell ${row.user2CellClass}`}>{row.user2Display}</td>
                         <td className="score-cell-point">{row.pointLabel}</td>
                       </tr>
                     ))}
